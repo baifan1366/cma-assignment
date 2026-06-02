@@ -1,11 +1,5 @@
 # CMA6134-T2610 Assignment Todo
 
-Sources analysed with `pypdf`:
-
-- `C:\Users\weixu\Downloads\CMA6134 T2610 Assignment-rev.pdf`
-- `C:\Users\weixu\Downloads\Lab 04 T2.pdf`
-- `C:\Users\weixu\Downloads\CHAPTER 4 MONTE CARLO METHODS AND SIMULATION vT2410.pdf`
-
 Assignment title: Simulation of a Hospital Emergency Department Queuing System
 
 Deadline: 22 June 2026, 23:59, Week 13
