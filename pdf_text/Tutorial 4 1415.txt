@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 
 ===== PAGE 1 =====
@@ -99,4 +100,107 @@ i) Average service time to fill and prepare the tanker.
 ii) Average waiting time for filling and preparing the tanker. 
 iii) Average arrival time of the oil tanker. 
 iv) Probability that an arriving tanker has to wait for service.    
+=======
+
+
+===== PAGE 1 =====
+TMA1301 Computational Methods Trimester 2  
+Tutorial 4 
+ 1 KCY/SHAHIDA/THL 
+TMA1301 - Tutorial 4 
+1. Generate a sequence of 5 two-digit random numbers by using the following methods: 
+(a) Mixed congruential method 
+(b) Multiplicative congruential method 
+(c) Additive congruential method 
+The recursive equation for the mixed congruential method is 
+  
+( )( )100mod5313 1 += −nn XX  and 
+460 =X . 
+2. Given a sequence of random numbers, 0.1306, 0.0422, 0.6597, 0.7965 and 0.7696, 
+generate five exponential random variates using the generator with  =  
+ 
+3. Generate a sequence of 10 uniformly distributed random variates in the interval [ -5, 
+10] using the following numbers: 0.4887, 0.0369, 0.8805, 0.6032, 0.1861, 0.7964, 
+0.7694, 0.9796, 0.3726, and 0.2891.  
+ 
+4.  The time between arrivals of oil tankers at a loading dock is given by the following 
+probability distribution as shown in Table 1. 
+ 
+Time between 
+arrivals 
+ (days) 
+Probability Cumulative distribution 
+function(CDF) 
+Random number’s 
+range 
+1 0.15   
+2 0.20   
+3 0.30   
+4 0.25   
+5 0.10   
+ 
+    Table 1 
+ 
+
+
+===== PAGE 2 =====
+TMA1301 Computational Methods Trimester 2  
+Tutorial 4 
+ 2 KCY/SHAHIDA/THL 
+The time required to fill a tanker with oil and prepare it for sea is given by the following 
+probability distribution as shown in Table 2. 
+ 
+Time to fill and prepare 
+(days) 
+Probability Cumulative 
+distribution 
+function(CDF) 
+Random 
+number’s range 
+2 0.20   
+3 0.25   
+4 0.25   
+5 0.20   
+6 0.10   
+    Table 2 
+a) Complete Table 1 and Table 2. 
+b) Develop a simulation table for 5 arrivals. Use the following random numbers: 26, 16, 
+48 and 43 for inter-arrival time and 43, 53, 24, 95 and 03  for service time. 
+ 
+ 
+ 
+Tanker Inter-
+arrival 
+time 
+Arrival 
+time 
+Service  
+time 
+Time 
+service 
+begins 
+Waiting 
+time 
+Time 
+service 
+ends 
+Time spends in 
+the system 
+1        
+2        
+3        
+4        
+5        
+
+
+===== PAGE 3 =====
+TMA1301 Computational Methods Trimester 2  
+Tutorial 4 
+ 3 KCY/SHAHIDA/THL 
+c) From the developed simulation table, compute the  
+i) Average service time to fill and prepare the tanker. 
+ii) Average waiting time for filling and preparing the tanker. 
+iii) Average arrival time of the oil tanker. 
+iv) Probability that an arriving tanker has to wait for service.    
+>>>>>>> 98a47cf510c2ed0828206d25de21103eaff1de40
                                                                                

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 
 ===== PAGE 1 =====
@@ -112,4 +113,120 @@ iii) Repeat for different trials.
  
 iv) Probabilities =numbers of coincidences/numbers of trials. 
  
+=======
+
+
+===== PAGE 1 =====
+TMA1301 Computational Methods 
+Lab 4 
+ 
+ Page 1 
+ 
+TMA1301 – Lab 4  
+ 
+1. Figure 1 below shows a circle with radius r = 1 inscribed within a square. The area 
+of the circle is 
+π 2r, and the area of the square (2 r)2 .  The ratio of the area of the 
+circle to the area of the square is    
+     
+  P = area of circle / area of square = π/4  
+ 
+ 
+ 
+                            
+ 
+ 
+ 
+ 
+ Write a program for the Monte Carlo simulation to approximate the value of π.   
+2. Write the program that can pass in any value n to estimate the integral in the 
+following way: 
+                                
+          
+5
+0 1
+1− − 
+=
+= ∑∫
+n
+x x 
+i
+e dx e n  
+ 
+The steps for approximation the integral are:   
+ 
+(i)    Pick n randomly distributed points  
+   in the 
+interval [0,5].      
+ 
+(ii) Compute the summation of f(x),  
+1
+( ) 
+=
+∑
+n
+i
+i
+f x  
+ 
+ 
+(iii)  Determine the average value of the function 
+ 
+ 
+     iv) Determine the value of the integration:  
+5
+0
+− =∫
+xe dx (b:a)* 
+_
+f 
+Figure 1 
+_
+1
+( ) 
+==
+∑
+n
+i
+i
+f x 
+f n  
+
+
+===== PAGE 2 =====
+TMA1301 Computational Methods 
+Lab 4 
+ 
+ Page 2 
+ 
+3. Consider the experiment of tossing two unbiased dice. Create a simulation to calculate 
+the probability that the sum of the numbers on two dice showing less than or equal to 4. 
+Observe the obtained answer with the theoretical solution.  
+ 
+The steps of simulation are as follows: 
+ 
+i) Generate random numbers between 1 and 6 for 2 x n array(2 dice). 
+ 
+ii) Calculate the sums of the two arrays(numbers on two dice). 
+ 
+iii) Count how many of these sums less than or equal to 4, m. 
+ 
+iv) Then probability can be obtained by: 
+   
+( 4) ≤ ≈ mP X n 
+4. Consider the birthday problem that in a room of n persons, what is the probability that 
+two people share the same birthday. Create a simulation to solve this birthday problem. 
+Observe the result of simulation with theoretical solution.  
+ 
+The steps of simulation are as follows: 
+ 
+i) Generate n random birthdays in the range 1 to 365 (ignore leap years). 
+ 
+ii) Check if two coincide. 
+ 
+iii) Repeat for different trials. 
+ 
+iv) Probabilities =numbers of coincidences/numbers of trials. 
+ 
+>>>>>>> 98a47cf510c2ed0828206d25de21103eaff1de40
  

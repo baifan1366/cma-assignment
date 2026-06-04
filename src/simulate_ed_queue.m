@@ -7,8 +7,12 @@ service_times = [];
 
 clock = 0;
 while clock < cfg.simulation_horizon
+<<<<<<< HEAD
     arrival_lambda = get_arrival_lambda(cfg, clock);
     inter_arrival_time = draw_exponential(arrival_lambda);
+=======
+    inter_arrival_time = draw_exponential(cfg.arrival_lambda);
+>>>>>>> 98a47cf510c2ed0828206d25de21103eaff1de40
     clock = clock + inter_arrival_time;
 
     if clock <= cfg.simulation_horizon
