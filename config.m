@@ -18,8 +18,15 @@ cfg.time_unit = 'minutes';
 % Arrival process.
 % Poisson arrivals are simulated using exponential inter-arrival times.
 % lambda is measured in patients per minute.
-cfg.mean_interarrival_time = 6;
+% To reflect busy emergency department periods, the model uses a higher
+% arrival rate during the middle part of the shift.
+cfg.use_peak_arrivals = true;
+cfg.mean_interarrival_time = 8;        % non-peak average, minutes
+cfg.peak_mean_interarrival_time = 4;   % peak average, minutes
+cfg.peak_start_time = 120;             % minute 120 to 360 is peak period
+cfg.peak_end_time = 360;
 cfg.arrival_lambda = 1 / cfg.mean_interarrival_time;
+cfg.peak_arrival_lambda = 1 / cfg.peak_mean_interarrival_time;
 
 % Priority distribution.
 % Priority 1 = critical, Priority 2 = urgent, Priority 3 = non-urgent.
