@@ -15,6 +15,12 @@ cfg.num_replications = 30;
 cfg.random_seed = 6134;
 cfg.time_unit = 'minutes';
 
+% Patient count control.
+% Set use_fixed_patients = true to simulate a fixed number of patients.
+% Set use_fixed_patients = false to use time-based Poisson arrivals.
+cfg.use_fixed_patients = false;
+cfg.fixed_patient_count = 20;  % only used when use_fixed_patients = true
+
 % Arrival process.
 % Poisson arrivals are simulated using exponential inter-arrival times.
 % lambda is measured in patients per minute.

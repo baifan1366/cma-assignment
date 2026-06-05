@@ -19,6 +19,9 @@ This project simulates a hospital emergency department queuing system for the CM
 - `src/draw_exponential.m` generates exponential random variables.
 - `src/draw_priority.m` generates discrete patient priorities.
 - `src/get_arrival_lambda.m` selects the non-peak or peak arrival rate.
+- `src/print_probability_tables.m` prints lecture-style probability tables.
+- `src/write_probability_tables.m` writes probability tables to Markdown.
+- `src/print_simulation_tables.m` prints sample patient-level simulation tables.
 - `src/select_next_patient.m` implements FIFO or priority queue selection.
 - `src/write_metrics_csv.m` writes metric tables to CSV files.
 - `src/write_patient_csv.m` writes a patient-level simulation table for one sample run.
@@ -36,6 +39,7 @@ run_simulation
 The output CSV files will be saved in `results/`.
 Each scenario produces a replication summary and a sample patient-level table.
 The runner also prints a formatted comparison table and writes `results/scenario_summary.md`.
+The runner also writes `results/probability_tables.md`.
 
 ## Scenarios
 

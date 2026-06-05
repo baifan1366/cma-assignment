@@ -1,0 +1,4 @@
+scenario,total_arrivals,patients_served_within_shift,average_waiting_time,average_queue_length,average_time_in_system,probability_waiting,doctor_utilization,total_simulation_time,last_departure_time,avg_wait_priority_1,avg_wait_priority_2,avg_wait_priority_3
+baseline,85.900000,67.033333,67.691701,9.964311,84.287449,0.782526,0.838561,562.932274,562.802032,7.348757,28.924881,116.542802
+improved,85.900000,80.566667,22.068338,3.655436,38.664085,0.568373,0.692090,511.303036,510.841548,2.970813,7.808903,39.306770
+fifo,85.900000,73.033333,47.971684,7.035260,64.567432,0.782877,0.831254,568.310340,568.180098,45.377939,47.433720,49.105461

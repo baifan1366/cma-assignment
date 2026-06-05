@@ -11,6 +11,7 @@ scenarios = {'baseline', 'improved', 'fifo'};
 num_scenarios = length(scenarios);
 scenario_doctors = zeros(1, num_scenarios);
 scenario_priority_queue = zeros(1, num_scenarios);
+sample_results = cell(1, num_scenarios);
 
 summary_rows = zeros(num_scenarios, 12);
 
@@ -50,11 +51,17 @@ for s = 1:num_scenarios
 
     write_metrics_csv(['results/' scenarios{s} '_replications.csv'], replication_metrics);
     write_patient_csv(['results/' scenarios{s} '_patients_sample.csv'], first_result);
+    sample_results{s} = first_result;
 endfor
 
+display_cfg = config('baseline');
+print_probability_tables(display_cfg);
+write_probability_tables('results/probability_tables.md', display_cfg);
+print_simulation_tables(scenarios, sample_results, 8);
 write_summary_csv('results/scenario_summary.csv', scenarios, summary_rows);
 write_summary_markdown('results/scenario_summary.md', scenarios, scenario_doctors, scenario_priority_queue, summary_rows);
 print_summary_table(scenarios, scenario_doctors, scenario_priority_queue, summary_rows);
 
 fprintf('\nSummary saved to results/scenario_summary.csv\n');
 fprintf('Markdown summary saved to results/scenario_summary.md\n');
+fprintf('Probability tables saved to results/probability_tables.md\n');

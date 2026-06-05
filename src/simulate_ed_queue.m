@@ -5,24 +5,45 @@ arrival_times = [];
 priorities = [];
 service_times = [];
 
-clock = 0;
-while clock < cfg.simulation_horizon
-    arrival_lambda = get_arrival_lambda(cfg, clock);
-    inter_arrival_time = draw_exponential(arrival_lambda);
-    clock = clock + inter_arrival_time;
-
-    if clock <= cfg.simulation_horizon
+if cfg.use_fixed_patients
+    % Generate a fixed number of patients
+    total_patients = cfg.fixed_patient_count;
+    clock = 0;
+    
+    for i = 1:total_patients
+        arrival_lambda = get_arrival_lambda(cfg, clock);
+        inter_arrival_time = draw_exponential(arrival_lambda);
+        clock = clock + inter_arrival_time;
+        
         priority = draw_priority(cfg.priority_values, cfg.priority_cdf);
         mu = cfg.service_mu_by_priority(priority);
         service_time = draw_exponential(mu);
-
+        
         arrival_times = [arrival_times, clock];
         priorities = [priorities, priority];
         service_times = [service_times, service_time];
-    endif
-endwhile
+    endfor
+else
+    % Generate patients based on simulation horizon (time-based)
+    clock = 0;
+    while clock < cfg.simulation_horizon
+        arrival_lambda = get_arrival_lambda(cfg, clock);
+        inter_arrival_time = draw_exponential(arrival_lambda);
+        clock = clock + inter_arrival_time;
 
-total_patients = length(arrival_times);
+        if clock <= cfg.simulation_horizon
+            priority = draw_priority(cfg.priority_values, cfg.priority_cdf);
+            mu = cfg.service_mu_by_priority(priority);
+            service_time = draw_exponential(mu);
+
+            arrival_times = [arrival_times, clock];
+            priorities = [priorities, priority];
+            service_times = [service_times, service_time];
+        endif
+    endwhile
+    
+    total_patients = length(arrival_times);
+endif
 
 if total_patients == 0
     result.arrival_times = [];
