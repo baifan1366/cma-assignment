@@ -1,31 +1,37 @@
-function cfg = config(scenario)
+function cfg = config()
 %CONFIG Central settings for the emergency department queue simulation.
-%   cfg = config() returns the baseline scenario.
-%   cfg = config('improved') returns an example improvement scenario.
+%   cfg = config() returns the default 4-doctor priority model settings.
 
-if nargin < 1
-    scenario = 'baseline';
-endif
-
-cfg.scenario_name = scenario;
+cfg.scenario_name = '4-doctor-priority';
 
 % General simulation settings.
 cfg.simulation_horizon = 480;   % minutes, 8-hour shift
-cfg.num_replications = 30;
+cfg.num_replications = 1;
 cfg.random_seed = 6134;
 cfg.time_unit = 'minutes';
+cfg.num_doctors = 4;
+
+% Random number generator selection.
+% 1 = built-in rand(), 2 = LCG, 3 = ERVG, 4 = URVG.
+cfg.rng_method = 1;
+cfg.rng_method_labels = {'Built-in rand()', 'Linear Congruential Generator (LCG)', ...
+    'Exponential Random Variate Generator (ERVG)', 'Uniform Random Variate Generator (URVG)'};
+
+% LCG parameters, used when rng_method = 2.
+cfg.lcg_seed = 46;
+cfg.lcg_a = 13;
+cfg.lcg_c = 53;
+cfg.lcg_m = 10000;
 
 % Patient count control.
 % Set use_fixed_patients = true to simulate a fixed number of patients.
 % Set use_fixed_patients = false to use time-based Poisson arrivals.
-cfg.use_fixed_patients = false;
-cfg.fixed_patient_count = 20;  % only used when use_fixed_patients = true
+cfg.use_fixed_patients = true;
+cfg.fixed_patient_count = 20;
 
 % Arrival process.
 % Poisson arrivals are simulated using exponential inter-arrival times.
 % lambda is measured in patients per minute.
-% To reflect busy emergency department periods, the model uses a higher
-% arrival rate during the middle part of the shift.
 cfg.use_peak_arrivals = true;
 cfg.mean_interarrival_time = 8;        % non-peak average, minutes
 cfg.peak_mean_interarrival_time = 4;   % peak average, minutes
@@ -43,23 +49,12 @@ cfg.priority_cdf = cumsum(cfg.priority_probabilities);
 
 % Service process.
 % Service times are exponential. The mean can depend on patient priority.
-cfg.mean_service_time_by_priority = [30, 20, 10];  % minutes
+cfg.mean_service_time_by_priority = [45, 30, 18];  % minutes
 cfg.service_mu_by_priority = 1 ./ cfg.mean_service_time_by_priority;
 
 % Queue discipline.
 % Higher urgency is represented by a lower priority number.
 % Patients with the same priority are served FIFO.
 cfg.use_priority_queue = true;
-
-if strcmpi(scenario, 'baseline')
-    cfg.num_doctors = 3;
-elseif strcmpi(scenario, 'improved')
-    cfg.num_doctors = 4;
-elseif strcmpi(scenario, 'fifo')
-    cfg.num_doctors = 3;
-    cfg.use_priority_queue = false;
-else
-    error('Unknown scenario. Use baseline, improved, or fifo.');
-endif
 
 endfunction

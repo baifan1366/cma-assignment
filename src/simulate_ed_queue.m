@@ -2,8 +2,14 @@ function result = simulate_ed_queue(cfg)
 %SIMULATE_ED_QUEUE Event-based multi-doctor emergency queue simulation.
 
 arrival_times = [];
+inter_arrival_times = [];
 priorities = [];
 service_times = [];
+arrival_lambdas = [];
+rn_interarrival = [];
+rn_priority = [];
+rn_service = [];
+rng_state = cfg.lcg_seed;
 
 if cfg.use_fixed_patients
     % Generate a fixed number of patients
@@ -12,33 +18,49 @@ if cfg.use_fixed_patients
     
     for i = 1:total_patients
         arrival_lambda = get_arrival_lambda(cfg, clock);
-        inter_arrival_time = draw_exponential(arrival_lambda);
+        [R_interarrival, rng_state] = draw_random_number(cfg, rng_state);
+        inter_arrival_time = -log(1 - R_interarrival) / arrival_lambda;
         clock = clock + inter_arrival_time;
         
-        priority = draw_priority(cfg.priority_values, cfg.priority_cdf);
+        [R_priority, rng_state] = draw_random_number(cfg, rng_state);
+        priority = cfg.priority_values(find(R_priority <= cfg.priority_cdf, 1));
         mu = cfg.service_mu_by_priority(priority);
-        service_time = draw_exponential(mu);
+        [R_service, rng_state] = draw_random_number(cfg, rng_state);
+        service_time = -log(1 - R_service) / mu;
         
+        inter_arrival_times = [inter_arrival_times, inter_arrival_time];
         arrival_times = [arrival_times, clock];
         priorities = [priorities, priority];
         service_times = [service_times, service_time];
+        arrival_lambdas = [arrival_lambdas, arrival_lambda];
+        rn_interarrival = [rn_interarrival, R_interarrival];
+        rn_priority = [rn_priority, R_priority];
+        rn_service = [rn_service, R_service];
     endfor
 else
     % Generate patients based on simulation horizon (time-based)
     clock = 0;
     while clock < cfg.simulation_horizon
         arrival_lambda = get_arrival_lambda(cfg, clock);
-        inter_arrival_time = draw_exponential(arrival_lambda);
+        [R_interarrival, rng_state] = draw_random_number(cfg, rng_state);
+        inter_arrival_time = -log(1 - R_interarrival) / arrival_lambda;
         clock = clock + inter_arrival_time;
 
         if clock <= cfg.simulation_horizon
-            priority = draw_priority(cfg.priority_values, cfg.priority_cdf);
+            [R_priority, rng_state] = draw_random_number(cfg, rng_state);
+            priority = cfg.priority_values(find(R_priority <= cfg.priority_cdf, 1));
             mu = cfg.service_mu_by_priority(priority);
-            service_time = draw_exponential(mu);
+            [R_service, rng_state] = draw_random_number(cfg, rng_state);
+            service_time = -log(1 - R_service) / mu;
 
+            inter_arrival_times = [inter_arrival_times, inter_arrival_time];
             arrival_times = [arrival_times, clock];
             priorities = [priorities, priority];
             service_times = [service_times, service_time];
+            arrival_lambdas = [arrival_lambdas, arrival_lambda];
+            rn_interarrival = [rn_interarrival, R_interarrival];
+            rn_priority = [rn_priority, R_priority];
+            rn_service = [rn_service, R_service];
         endif
     endwhile
     
@@ -47,8 +69,13 @@ endif
 
 if total_patients == 0
     result.arrival_times = [];
+    result.inter_arrival_times = [];
     result.priorities = [];
     result.service_times = [];
+    result.arrival_lambdas = [];
+    result.rn_interarrival = [];
+    result.rn_priority = [];
+    result.rn_service = [];
     result.service_start_times = [];
     result.service_end_times = [];
     result.assigned_doctors = [];
@@ -61,6 +88,8 @@ if total_patients == 0
     result.patients_served_within_shift = 0;
     result.average_waiting_time = 0;
     result.average_waiting_time_by_priority = zeros(1, length(cfg.priority_values));
+    result.average_interarrival_time = 0;
+    result.average_service_time = 0;
     result.average_queue_length = 0;
     result.average_time_in_system = 0;
     result.probability_waiting = 0;
@@ -117,8 +146,8 @@ while completed_patients < total_patients
 
     idle_doctors = find(doctor_current_patient == 0);
     while ~isempty(idle_doctors) && ~isempty(queue)
-        d = idle_doctors(1);
-        selected_position = select_next_patient(queue, priorities, cfg.use_priority_queue);
+        d = select_idle_doctor(idle_doctors, doctor_busy_time);
+        selected_position = select_next_patient(queue, priorities);
         patient = queue(selected_position);
         queue(selected_position) = [];
 
@@ -152,8 +181,14 @@ for p = 1:length(cfg.priority_values)
 endfor
 
 result.arrival_times = arrival_times;
+result.inter_arrival_times = inter_arrival_times;
 result.priorities = priorities;
 result.service_times = service_times;
+result.arrival_lambdas = arrival_lambdas;
+result.rn_interarrival = rn_interarrival;
+result.rn_priority = rn_priority;
+result.rn_service = rn_service;
+result.rng_method = cfg.rng_method;
 result.service_start_times = service_start_times;
 result.service_end_times = service_end_times;
 result.assigned_doctors = assigned_doctors;
@@ -167,6 +202,8 @@ result.total_patients = patients_served_within_shift;
 result.patients_served_within_shift = patients_served_within_shift;
 result.average_waiting_time = mean(waiting_times);
 result.average_waiting_time_by_priority = average_waiting_time_by_priority;
+result.average_interarrival_time = mean(inter_arrival_times);
+result.average_service_time = mean(service_times);
 result.average_queue_length = queue_area / total_simulation_time;
 result.average_time_in_system = mean(time_in_system);
 result.probability_waiting = sum(waiting_times > 1e-9) / total_patients;

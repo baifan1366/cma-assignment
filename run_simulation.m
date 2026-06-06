@@ -1,4 +1,4 @@
-% Main runner for the hospital emergency department queue simulation.
+% Main runner for the hospital emergency department priority queue simulation.
 % Run this file in Octave or FreeMat from the project root.
 
 addpath('src');
@@ -7,61 +7,46 @@ if exist('results', 'dir') ~= 7
     mkdir('results');
 endif
 
-scenarios = {'baseline', 'improved', 'fifo'};
-num_scenarios = length(scenarios);
-scenario_doctors = zeros(1, num_scenarios);
-scenario_priority_queue = zeros(1, num_scenarios);
-sample_results = cell(1, num_scenarios);
+cfg = config();
+cfg = prompt_user_config(cfg);
 
-summary_rows = zeros(num_scenarios, 12);
+rand('seed', cfg.random_seed);
+result = simulate_ed_queue(cfg);
 
-for s = 1:num_scenarios
-    cfg = config(scenarios{s});
-    scenario_doctors(s) = cfg.num_doctors;
-    scenario_priority_queue(s) = cfg.use_priority_queue;
+scenario_name = cfg.scenario_name;
+scenarios = {scenario_name};
+scenario_doctors = cfg.num_doctors;
+scenario_priority_queue = cfg.use_priority_queue;
 
-    replication_metrics = zeros(cfg.num_replications, 12);
-    first_result = [];
+summary_rows = [
+    result.total_arrivals, ...
+    result.total_patients, ...
+    result.average_waiting_time, ...
+    result.average_queue_length, ...
+    result.average_time_in_system, ...
+    result.probability_waiting, ...
+    result.overall_doctor_utilization, ...
+    result.total_simulation_time, ...
+    result.last_departure_time, ...
+    result.average_waiting_time_by_priority(1), ...
+    result.average_waiting_time_by_priority(2), ...
+    result.average_waiting_time_by_priority(3)
+];
 
-    for r = 1:cfg.num_replications
-        rand('seed', cfg.random_seed + r);
-        result = simulate_ed_queue(cfg);
-        if r == 1
-            first_result = result;
-        endif
-
-        replication_metrics(r, :) = [
-            result.total_arrivals, ...
-            result.total_patients, ...
-            result.average_waiting_time, ...
-            result.average_queue_length, ...
-            result.average_time_in_system, ...
-            result.probability_waiting, ...
-            result.overall_doctor_utilization, ...
-            result.total_simulation_time, ...
-            result.last_departure_time, ...
-            result.average_waiting_time_by_priority(1), ...
-            result.average_waiting_time_by_priority(2), ...
-            result.average_waiting_time_by_priority(3)
-        ];
-    endfor
-
-    mean_metrics = mean(replication_metrics, 1);
-    summary_rows(s, :) = mean_metrics;
-
-    write_metrics_csv(['results/' scenarios{s} '_replications.csv'], replication_metrics);
-    write_patient_csv(['results/' scenarios{s} '_patients_sample.csv'], first_result);
-    sample_results{s} = first_result;
-endfor
-
-display_cfg = config('baseline');
-print_probability_tables(display_cfg);
-write_probability_tables('results/probability_tables.md', display_cfg);
-print_simulation_tables(scenarios, sample_results, 8);
+write_metrics_csv('results/priority_model_metrics.csv', summary_rows);
+write_patient_csv('results/priority_model_simulation_table.csv', result);
 write_summary_csv('results/scenario_summary.csv', scenarios, summary_rows);
 write_summary_markdown('results/scenario_summary.md', scenarios, scenario_doctors, scenario_priority_queue, summary_rows);
-print_summary_table(scenarios, scenario_doctors, scenario_priority_queue, summary_rows);
 
-fprintf('\nSummary saved to results/scenario_summary.csv\n');
-fprintf('Markdown summary saved to results/scenario_summary.md\n');
-fprintf('Probability tables saved to results/probability_tables.md\n');
+print_probability_tables(cfg);
+write_probability_tables('results/probability_tables.md', cfg);
+print_doctor_simulation_tables(cfg, result);
+print_simulation_tables(scenarios, {result}, result.total_arrivals);
+print_evaluation_details(cfg, result);
+
+fprintf('\nOutput files saved:\n');
+fprintf('- results/probability_tables.md\n');
+fprintf('- results/priority_model_simulation_table.csv\n');
+fprintf('- results/priority_model_metrics.csv\n');
+fprintf('- results/scenario_summary.csv\n');
+fprintf('- results/scenario_summary.md\n');

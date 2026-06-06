@@ -5,6 +5,39 @@ fprintf('\n%s\n', repeat_char('=', 86));
 fprintf(' Probability Tables / Input Distributions\n');
 fprintf('%s\n', repeat_char('=', 86));
 
+fprintf('\nRandom Number Generator\n');
+fprintf('%s\n', repeat_char('-', 86));
+fprintf(' %-6s %-42s %-24s\n', 'No.', 'Generator', 'Status');
+fprintf('%s\n', repeat_char('-', 86));
+for i = 1:4
+    status = '';
+    if cfg.rng_method == i
+        status = 'Selected';
+    endif
+    fprintf(' %-6d %-42s %-24s\n', i, cfg.rng_method_labels{i}, status);
+endfor
+fprintf('%s\n', repeat_char('-', 86));
+
+if cfg.rng_method == 2
+    fprintf(' LCG formula: X(i+1) = mod(a * X(i) + c, m), R = X / m\n');
+    fprintf(' LCG parameters: X0=%d, a=%d, c=%d, m=%d\n', ...
+        cfg.lcg_seed, cfg.lcg_a, cfg.lcg_c, cfg.lcg_m);
+elseif cfg.rng_method == 3
+    fprintf(' ERVG formula: X = -log(1 - R) / rate, using base R in [0,1]\n');
+elseif cfg.rng_method == 4
+    fprintf(' URVG formula: X = a + (b-a)R, using a=0 and b=1 for base R\n');
+endif
+
+fprintf('\nInput Parameters\n');
+fprintf('%s\n', repeat_char('-', 86));
+fprintf(' %-32s %18s\n', 'Parameter', 'Value');
+fprintf('%s\n', repeat_char('-', 86));
+fprintf(' %-32s %18d\n', 'Number of doctors', cfg.num_doctors);
+fprintf(' %-32s %18d\n', 'Number of patients', cfg.fixed_patient_count);
+fprintf(' %-32s %15.2f min\n', 'Simulation horizon', cfg.simulation_horizon);
+fprintf(' %-32s %18d\n', 'Priority queue enabled', cfg.use_priority_queue);
+fprintf('%s\n', repeat_char('-', 86));
+
 fprintf('\nArrival Process: Exponential Inter-arrival Time\n');
 fprintf('%s\n', repeat_char('-', 86));
 fprintf(' %-14s %12s %12s %18s %16s\n', 'Period', 'Start', 'End', 'Mean IAT', 'Lambda');

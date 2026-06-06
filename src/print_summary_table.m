@@ -4,7 +4,7 @@ function print_summary_table(scenarios, doctors, priority_queue, rows)
 line = repeat_char('-', 119);
 
 fprintf('\n%s\n', line);
-fprintf(' Hospital Emergency Department Queue Simulation - Scenario Comparison\n');
+fprintf(' Hospital Emergency Department Queue Simulation - Performance Metrics\n');
 fprintf('%s\n', line);
 fprintf(' Replications: averaged result | Time unit: minutes | arrivals stop at the configured shift end\n');
 fprintf('%s\n', line);
@@ -43,16 +43,20 @@ endfor
 
 fprintf('%s\n', repeat_char('-', 68));
 
-[best_wait, best_wait_index] = min(rows(:, 3));
-[best_served, best_served_index] = max(rows(:, 2));
-[best_critical_wait, best_critical_index] = min(rows(:, 10));
+if length(scenarios) > 1
+    [best_wait, best_wait_index] = min(rows(:, 3));
+    [best_served, best_served_index] = max(rows(:, 2));
+    [best_critical_wait, best_critical_index] = min(rows(:, 10));
 
-fprintf('\nKey Insights\n');
-fprintf('- Lowest average waiting time: %s (%.2f minutes)\n', scenarios{best_wait_index}, best_wait);
-fprintf('- Highest patients served within shift: %s (%.2f patients)\n', scenarios{best_served_index}, best_served);
-fprintf('- Lowest critical-patient waiting time: %s (%.2f minutes)\n', scenarios{best_critical_index}, best_critical_wait);
+    fprintf('\nKey Insights\n');
+    fprintf('- Lowest average waiting time: %s (%.2f minutes)\n', scenarios{best_wait_index}, best_wait);
+    fprintf('- Highest patients served within shift: %s (%.2f patients)\n', scenarios{best_served_index}, best_served);
+    fprintf('- Lowest critical-patient waiting time: %s (%.2f minutes)\n', scenarios{best_critical_index}, best_critical_wait);
 
-fprintf('\nRecommended scenario: %s\n', scenarios{best_wait_index});
-fprintf('Reason: it gives the lowest overall waiting time while keeping critical-patient waiting time low.\n');
+    fprintf('\nRecommended scenario: %s\n', scenarios{best_wait_index});
+    fprintf('Reason: it gives the lowest overall waiting time while keeping critical-patient waiting time low.\n');
+else
+    fprintf('\nModel note: this run uses the required 4-doctor priority queue model only.\n');
+endif
 
 endfunction

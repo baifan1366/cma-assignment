@@ -9,23 +9,24 @@ This project simulates a hospital emergency department queuing system for the CM
 - The model uses different non-peak and peak arrival rates to represent busy emergency department periods.
 - Service periods follow exponential distributions.
 - Patient priority is generated using a discrete distribution.
-- The baseline model uses a priority queue with FIFO order inside the same priority level.
+- The model uses a 4-doctor priority queue with FIFO order inside the same priority level.
 
 ## Files
 
 - `config.m` stores the scenario settings and random-variable parameters.
-- `run_simulation.m` runs all scenarios and writes result CSV files.
+- `run_simulation.m` runs the 4-doctor priority model and writes result CSV files.
 - `src/simulate_ed_queue.m` contains the event-based queue simulation.
 - `src/draw_exponential.m` generates exponential random variables.
 - `src/draw_priority.m` generates discrete patient priorities.
 - `src/get_arrival_lambda.m` selects the non-peak or peak arrival rate.
 - `src/print_probability_tables.m` prints lecture-style probability tables.
 - `src/write_probability_tables.m` writes probability tables to Markdown.
+- `src/print_doctor_simulation_tables.m` prints separate simulation tables for each doctor.
 - `src/print_simulation_tables.m` prints sample patient-level simulation tables.
-- `src/select_next_patient.m` implements FIFO or priority queue selection.
+- `src/select_next_patient.m` implements priority queue selection with FIFO tie-breaking.
 - `src/write_metrics_csv.m` writes metric tables to CSV files.
 - `src/write_patient_csv.m` writes a patient-level simulation table for one sample run.
-- `src/write_summary_csv.m` writes scenario comparison results.
+- `src/write_summary_csv.m` writes the performance summary results.
 - `results/` stores generated output files.
 
 ## How To Run
@@ -37,15 +38,17 @@ run_simulation
 ```
 
 The output CSV files will be saved in `results/`.
-Each scenario produces a replication summary and a sample patient-level table.
+The run produces a performance summary and a patient-level simulation table.
 The runner also prints a formatted comparison table and writes `results/scenario_summary.md`.
 The runner also writes `results/probability_tables.md`.
 
-## Scenarios
+## Model
 
-- `baseline`: 3 doctors with priority queue.
-- `improved`: 4 doctors with priority queue.
-- `fifo`: 3 doctors with FIFO queue.
+- `4-doctor-priority`: 4 doctors with priority queue.
+- Patients with higher urgency are served first.
+- Patients with the same priority are served using FIFO order.
+- User inputs control patient count, peak/non-peak period, and arrival rates.
+- User input also controls the random number generator: built-in `rand()`, LCG, ERVG, or URVG.
 
 ## Key Parameters
 

@@ -8,6 +8,36 @@ endif
 
 fprintf(fid, '# Probability Tables / Input Distributions\n\n');
 
+fprintf(fid, '## Random Number Generator\n\n');
+fprintf(fid, '| No. | Generator | Status |\n');
+fprintf(fid, '|---:|---|---|\n');
+for i = 1:4
+    status = '';
+    if cfg.rng_method == i
+        status = 'Selected';
+    endif
+    fprintf(fid, '| %d | %s | %s |\n', i, cfg.rng_method_labels{i}, status);
+endfor
+fprintf(fid, '\n');
+
+if cfg.rng_method == 2
+    fprintf(fid, 'LCG formula: `X(i+1) = mod(a * X(i) + c, m)`, `R = X / m`.\n\n');
+    fprintf(fid, 'LCG parameters: `X0=%d`, `a=%d`, `c=%d`, `m=%d`.\n\n', ...
+        cfg.lcg_seed, cfg.lcg_a, cfg.lcg_c, cfg.lcg_m);
+elseif cfg.rng_method == 3
+    fprintf(fid, 'ERVG formula: `X = -log(1 - R) / rate`, using base `R` in `[0,1]`.\n\n');
+elseif cfg.rng_method == 4
+    fprintf(fid, 'URVG formula: `X = a + (b-a)R`, using `a=0` and `b=1` for base `R`.\n\n');
+endif
+
+fprintf(fid, '## Input Parameters\n\n');
+fprintf(fid, '| Parameter | Value |\n');
+fprintf(fid, '|---|---:|\n');
+fprintf(fid, '| Number of doctors | %d |\n', cfg.num_doctors);
+fprintf(fid, '| Number of patients | %d |\n', cfg.fixed_patient_count);
+fprintf(fid, '| Simulation horizon | %.2f min |\n', cfg.simulation_horizon);
+fprintf(fid, '| Priority queue enabled | %d |\n\n', cfg.use_priority_queue);
+
 fprintf(fid, '## Arrival Process\n\n');
 fprintf(fid, '| Period | Start | End | Mean Inter-arrival Time | Lambda |\n');
 fprintf(fid, '|---|---:|---:|---:|---:|\n');
